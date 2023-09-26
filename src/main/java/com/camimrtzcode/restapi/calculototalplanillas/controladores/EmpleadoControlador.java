@@ -13,14 +13,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.camimrtzcode.restapi.calculototalplanillas.modelos.entidades.Empleado;
 import com.camimrtzcode.restapi.calculototalplanillas.modelos.jpa.EmpleadoRepository;
+import com.camimrtzcode.restapi.calculototalplanillas.modelos.servicios.ProcesadorPlanillas;
 
 @RestController
 public class EmpleadoControlador {
 	
 	private EmpleadoRepository emplService;
+	private ProcesadorPlanillas procesadorPlanillasService;
 
-	public EmpleadoControlador(EmpleadoRepository emplService) {
+	public EmpleadoControlador(EmpleadoRepository emplService, ProcesadorPlanillas procesadorPlanillasService) {
 		this.emplService = emplService;
+		this.procesadorPlanillasService = procesadorPlanillasService;
 	}
 	
 	@GetMapping("/empleados")
@@ -43,5 +46,14 @@ public class EmpleadoControlador {
 	public ResponseEntity<Empleado> crearEmpleado(@RequestBody Empleado empl) {
 		emplService.save(empl);
 		return ResponseEntity.created(null).build();
+	}
+	
+	@GetMapping("/planilla")
+	public float obtenerPlanilla() {
+		float total = 0;
+		
+		total = procesadorPlanillasService.calcularTotalPagar();
+		
+		return total;
 	}
 }
