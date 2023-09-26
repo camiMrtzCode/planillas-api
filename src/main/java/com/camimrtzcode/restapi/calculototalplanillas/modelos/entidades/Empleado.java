@@ -15,7 +15,7 @@ public class Empleado {
 	public float montoMensual;
 	public boolean activo;
 	
-	protected Empleado() { }
+	public Empleado() { }
 
 	public Empleado(Integer id, String nombre, float montoMensual, boolean activo) {
 		super();

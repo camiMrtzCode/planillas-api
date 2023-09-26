@@ -12,6 +12,7 @@ public class ProveedorMiembrosPlanillaImpl implements ProveedorMiembrosPlanilla 
 	
 	private EmpleadoRepository emplService;
 	
+	
 	public ProveedorMiembrosPlanillaImpl(EmpleadoRepository emplRepository) {
 		this.emplService = emplRepository;
 	}
