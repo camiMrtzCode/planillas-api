@@ -5,15 +5,18 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.camimrtzcode.restapi.calculototalplanillas.modelos.entidades.Empleado;
+import com.camimrtzcode.restapi.calculototalplanillas.modelos.jpa.EmpleadoRepository;
 
 
 @Service
 public class ProcesadorPlanillas {
 	
 	private final ProveedorMiembrosPlanilla proveedorMiembrosPlanilla;
+	private final EmpleadoRepository empleadoRepository;
 
-	public ProcesadorPlanillas(ProveedorMiembrosPlanilla proveedorMiembrosPlanilla) {
+	public ProcesadorPlanillas(ProveedorMiembrosPlanilla proveedorMiembrosPlanilla, EmpleadoRepository empleadoRepository) {
         this.proveedorMiembrosPlanilla = proveedorMiembrosPlanilla;
+        this.empleadoRepository = empleadoRepository;
     }
 
     public float calcularTotalPagar() {

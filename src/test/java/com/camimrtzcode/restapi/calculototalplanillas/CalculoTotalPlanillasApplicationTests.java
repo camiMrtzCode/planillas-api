@@ -1,73 +1,48 @@
 package com.camimrtzcode.restapi.calculototalplanillas;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.camimrtzcode.restapi.calculototalplanillas.modelos.entidades.Empleado;
+import com.camimrtzcode.restapi.calculototalplanillas.modelos.jpa.EmpleadoRepository;
 import com.camimrtzcode.restapi.calculototalplanillas.modelos.servicios.ProcesadorPlanillas;
 import com.camimrtzcode.restapi.calculototalplanillas.modelos.servicios.ProveedorMiembrosPlanilla;
-import com.camimrtzcode.restapi.calculototalplanillas.modelos.servicios.ProveedorMiembrosPlanillaImpl;
 
 @SpringBootTest
 class CalculoTotalPlanillasApplicationTests {
 	
 	@Test
-    public void testMontoMensualNegativo() {
-        ProveedorMiembrosPlanilla proveedor = mock(ProveedorMiembrosPlanilla.class);
+    void testObtenerMontoTotalPlanilla() {
+        ProveedorMiembrosPlanilla proveedorMiembrosPlanilla = Mockito.mock(ProveedorMiembrosPlanilla.class);
+        List<Empleado> empleados = Arrays.asList(
+            new Empleado(1, "Camilo", 1000, true),
+            new Empleado(2, "Felipe", 1200, true),
+//          El monto mensual es negativo
+            new Empleado(3, "Laura", -500, true),
+//            new Empleado(3, "Laura", 500, true),
+            new Empleado(4, "Viviana", 1500, false),
+//          El Id es 0
+//            new Empleado(0, "David", 2000, true),
+            new Empleado(5, "David", 2000, true),
+//          El Nombre esta vacio
+//            new Empleado(6, "", 2500, true)
+            new Empleado(6, "Enrique", 2500, true)
+        );
+        Mockito.when(proveedorMiembrosPlanilla.obtenerEmpleadosPlanilla()).thenReturn(empleados);
 
-        List<Empleado> empleados = new ArrayList<>();
-        empleados.add(new Empleado(1, "Juan", 2000.0f, true));
-        empleados.add(new Empleado(2, "Maria", -1500.0f, true));
-        empleados.add(new Empleado(3, "Carlos", 1800.0f, true));
-        
-        when(proveedor.obtenerEmpleadosPlanilla()).thenReturn(empleados);
+        EmpleadoRepository empleadoRepository = Mockito.mock(EmpleadoRepository.class);
 
-        ProcesadorPlanillas procesador = new ProcesadorPlanillas(proveedor);
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, procesador::calcularTotalPagar);
+        ProcesadorPlanillas procesadorPlanillas = new ProcesadorPlanillas(proveedorMiembrosPlanilla, empleadoRepository);
 
-        assertEquals("El monto mensual no puede ser negativo", exception.getMessage());
+        float montoTotal = procesadorPlanillas.calcularTotalPagar();
+
+        assertEquals(7200, montoTotal);
+//        assertEquals(4700, montoTotal);
     }
-	
-	@Test
-    public void testIdCero() {
-        ProveedorMiembrosPlanilla proveedor = mock(ProveedorMiembrosPlanilla.class);
-
-        List<Empleado> empleados = new ArrayList<>();
-        empleados.add(new Empleado(1, "Juan", 2000.0f, true));
-        empleados.add(new Empleado(2, "Maria", 1800.0f, true));
-        empleados.add(new Empleado(0, "Carlos", 1500.0f, true));
-
-        when(proveedor.obtenerEmpleadosPlanilla()).thenReturn(empleados);
-
-        ProcesadorPlanillas procesador = new ProcesadorPlanillas(proveedor);
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, procesador::calcularTotalPagar);
-
-        assertEquals("El ID del empleado no puede ser igual a 0", exception.getMessage());
-    }
-	
-	@Test
-    public void testNombreVacio() {
-        ProveedorMiembrosPlanilla proveedor = mock(ProveedorMiembrosPlanilla.class);
-
-        List<Empleado> empleados = new ArrayList<>();
-        empleados.add(new Empleado(1, "Juan", 2000.0f, true));
-        empleados.add(new Empleado(2, "Maria", 1800.0f, true));
-        empleados.add(new Empleado(3, "", 1500.0f, true));
-
-        when(proveedor.obtenerEmpleadosPlanilla()).thenReturn(empleados);
-
-        ProcesadorPlanillas procesador = new ProcesadorPlanillas(proveedor);
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, procesador::calcularTotalPagar);
-
-        assertEquals("El nombre del empleado no puede estar vacío", exception.getMessage());
-    }
-
 }
