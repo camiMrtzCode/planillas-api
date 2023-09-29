@@ -24,8 +24,8 @@ class CalculoTotalPlanillasApplicationTests {
             new Empleado(1, "Camilo", 1000, true),
             new Empleado(2, "Felipe", 1200, true),
 //          El monto mensual es negativo
-            new Empleado(3, "Laura", -500, true),
-//            new Empleado(3, "Laura", 500, true),
+//            new Empleado(3, "Laura", -500, true),
+            new Empleado(3, "Laura", 500, true),
             new Empleado(4, "Viviana", 1500, false),
 //          El Id es 0
 //            new Empleado(0, "David", 2000, true),
